@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas - Estética & Bienestar</title>
+    <style>
+        :root {
+            --primary: #d4a373;
+            --primary-dark: #bc8a5f;
+            --bg-soft: #fefae0;
+            --bg-dark: #faedcd;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --accent: #e07a5f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #faf7f2;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--bg-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Info & Politicas */
+        .info-card {
+            background-color: var(--white);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .info-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .politicas {
+            background-color: #fff5f2;
+            border-left: 4px solid var(--accent);
+        }
+
+        .politicas h3 {
+            color: var(--accent);
+        }
+
+        /* Tabs de Categorías */
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn {
+            background-color: var(--white);
+            border: 1px solid var(--bg-dark);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Lista de Servicios */
+        .services-container {
+            margin-bottom: 40px;
+        }
+
+        .category-panel {
+            display: none;
+        }
+
+        .category-panel.active {
+            display: block;
+        }
+
+        .service-item {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(212, 163, 115, 0.1);
+        }
+
+        .service-info h4 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .service-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .service-price {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 2px;
+        }
+
+        .btn-select {
+            background-color: var(--bg-dark);
+            color: var(--primary-dark);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-select:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Formulario */
+        .booking-form {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            margin-bottom: 5px;
+        }
+
+        .booking-form h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-weight: 400;
+            border-bottom: 1px solid var(--bg-dark);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--bg-dark);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: #fafafa;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--white);
+        }
+
+        .btn-submit {
+            background-color: #25d366;
+            color: var(--white);
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #1ebd58;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .service-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .btn-select {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Estética & Bienestar</h1>
+        <p>📍 Ayacucho 1096, 7° Piso, Recoleta</p>
+        <p>🕒 Lunes a Sábado de 10:00 a 20:00 hs</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="info-card politicas">
+            <h3>⚠️ IMPORTANTE: Política de Reserva</h3>
+            <p>• Para confirmar cualquier turno se requiere una **seña del 30%** del valor del servicio.</p>
+            <p>• Las cancelaciones o modificaciones se realizan con un mínimo de **24 horas de anticipación**.</p>
+            <p>• De lo contrario, la seña se perderá sin excepción y se solicitará una nueva para reagendar.</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('unas')">💅 Uñas</button>
+            <button class="tab-btn" onclick="switchTab('pestanas')">👁️ Pestañas y Cejas</button>
+            <button class="tab-btn" onclick="switchTab('masajes')">💆 Masajes</button>
+            <button class="tab-btn" onclick="switchTab('rostro')">✨ Rostro y Podoestética</button>
+        </div>
+
+        <div class="services-container">
+            
+            <div id="unas" class="category-panel active">
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Manicuría Semipermanente</h4>
+                        <div class="service-meta">⏱️ 45 min | <span class="service-price">$35.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Manicuría Semipermanente ($35.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Manicuría Tradicional</h4>
+                        <div class="service-meta">⏱️ 30 min | <span class="service-price">$28.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Manicuría Tradicional ($28.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Esculpidas en Polygel / Acrílico / Gel</h4>
+                        <div class="service-meta">⏱️ 2 hs 30 min | <span class="service-price">$45.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Esculpidas en Polygel/Acrílico/Gel ($45.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Soft Gel</h4>
+                        <div class="service-meta">⏱️ 1 h 30 min | <span class="service-price">$42.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Soft Gel ($42.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Pedicuría</h4>
+                        <div class="service-meta">⏱️ 45 min | <span class="service-price">$38.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Pedicuría ($38.000)')">Elegir</button>
+                </div>
+            </div>
+
+            <div id="pestanas" class="category-panel">
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Perfilado de Cejas</h4>
+                        <div class="service-meta">⏱️ 20 min | <span class="service-price">$18.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Perfilado de Cejas ($18.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Laminado de Cejas + Perfilado</h4>
+                        <div class="service-meta">⏱️ 15 min | <span class="service-price">$35.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Laminado de Cejas + Perfilado ($35.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Lifting de Pestañas</h4>
+                        <div class="service-meta">⏱️ 30 min | <span class="service-price">$38.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Lifting de Pestañas ($38.000)')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Extensiones de Pestañas</h4>
+                        <div class="service-meta">⏱️ 2 hs | <span class="service-price">A partir de $38.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Extensiones de Pestañas (A partir de $38.000)')">Elegir</button>
+                </div>
+            </div>
+
+            <div id="masajes" class="category-panel">
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Masaje Descontracturante (Corto)</h4>
+                        <div class="service-meta">⏱️ 30 min | <span class="service-price">Consultar Precio</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Masaje Descontracturante 30 min')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Masaje Descontracturante (Completo)</h4>
+                        <div class="service-meta">⏱️ 45 min | <span class="service-price">Consultar Precio</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Masaje Descontracturante 45 min')">Elegir</button>
+                </div>
+            </div>
+
+            <div id="rostro" class="category-panel">
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Limpieza Facial (Según tipo de piel)</h4>
+                        <div class="service-meta">⏱️ 45 min | <span class="service-price">Consultar Precio</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Limpieza Facial 45 min')">Elegir</button>
+                </div>
+                <div class="service-item">
+                    <div class="service-info">
+                        <h4>Podo-estética</h4>
+                        <div class="service-meta">⏱️ 45 min | <span class="service-price">$45.000</span></div>
+                    </div>
+                    <button class="btn-select" onclick="selectService('Podo-estética ($45.000)')">Elegir</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="booking-form" id="formulario-reserva">
+            <h3>Completa tus datos para reservar</h3>
+            <form id="appointmentForm" onsubmit="sendToWhatsApp(event)">
+                
+                <div class="form-group">
+                    <label for="service">Servicio Seleccionado</label>
+                    <select id="service" required>
+                        <option value="">-- Selecciona un servicio de la lista de arriba --</option>
+                        <option value="Manicuría Semipermanente ($35.000)">Manicuría Semipermanente - $35.000</option>
+                        <option value="Manicuría Tradicional ($28.000)">Manicuría Tradicional - $28.000</option>
+                        <option value="Esculpidas en Polygel/Acrílico/Gel ($45.000)">Esculpidas en Polygel/Acrílico/Gel - $45.000</option>
+                        <option value="Soft Gel ($42.000)">Soft Gel - $42.000</option>
+                        <option value="Pedicuría ($38.000)">Pedicuría - $38.000</option>
+                        <option value="Perfilado de Cejas ($18.000)">Perfilado de Cejas - $18.000</option>
+                        <option value="Laminado de Cejas + Perfilado ($35.000)">Laminado de Cejas + Perfilado - $35.000</option>
+                        <option value="Lifting de Pestañas ($38.000)">Lifting de Pestañas - $38.000</option>
+                        <option value="Extensiones de Pestañas (A partir de $38.000)">Extensiones de Pestañas - A partir de $38.000</option>
+                        <option value="Masaje Descontracturante 30 min">Masaje Descontracturante 30 min - Consultar precio</option>
+                        <option value="Masaje Descontracturante 45 min">Masaje Descontracturante 45 min - Consultar precio</option>
+                        <option value="Limpieza Facial 45 min">Limpieza Facial 45 min - Consultar precio</option>
+                        <option value="Podo-estética ($45.000)">Podo-estética - $45.000</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Nombre y Apellido</label>
+                    <input type="text" id="name" placeholder="Ej: María Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Teléfono de Contacto</label>
+                    <input type="tel" id="phone" placeholder="Ej: 11 1234 5678" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Fecha Solicitada (Lunes a Sábado)</label>
+                    <input type="date" id="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Hora Solicitada (10:00 a 20:00 hs)</label>
+                    <input type="time" id="time" min="10:00" max="20:00" required>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    📱 Confirmar Turno por WhatsApp
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 Estética & Bienestar - Recoleta, CABA</p>
+        <p>Atención con turno previo y seña del 30%</p>
+    </footer>
+
+    <script>
+        // Cambiar entre pestañas de categorías
+        function switchTab(categoryId) {
+            document.querySelectorAll('.category-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(categoryId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Seleccionar servicio de la lista y hacer scroll al formulario
+        function selectService(serviceValue) {
+            const selectElement = document.getElementById('service');
+            selectElement.value = serviceValue;
+            
+            document.getElementById('formulario-reserva').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Enviar datos por WhatsApp
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+
+            const phoneNumber = "5491124949196"; // Tu WhatsApp con código de país
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const service = document.getElementById('service').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            // Cambiar formato de fecha visual (AAAA-MM-DD a DD/MM/AAAA)
+            const dateParts = date.split('-');
+            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+
+            // Mensaje que te llegará a vos
+            const message = `¡Hola! Me gustaría agendar un turno.%0A%0A` +
+                            `📌 *Datos de la Reserva:*%0A` +
+                            `• *Cliente:* ${name}%0A` +
+                            `• *Teléfono:* ${phone}%0A` +
+                            `• *Servicio:* ${service}%0A` +
+                            `• *Fecha:* ${formattedDate}%0A` +
+                            `• *Hora:* ${time} hs%0A%0A` +
+                            `⚠️ *Aviso:* Entiendo que el turno se confirma abonando el 30% de seña y que la cancelación se realiza con 24 hs de anticipación.`;
+
+            // Abre la API de WhatsApp
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Validación básica de días (evitar domingos en el calendario si se desea)
+        const dateInput = document.getElementById('date');
+        dateInput.addEventListener('input', function(e){
+            const day = new Date(this.value).getUTCDay();
+            if([0].includes(day)){ // 0 es Domingo
+                e.preventDefault();
+                this.value = '';
+                alert('Atendemos de Lunes a Sábados. Por favor, elegí otro día.');
+            }
+        });
+    </script>
+</body>
+</html>
